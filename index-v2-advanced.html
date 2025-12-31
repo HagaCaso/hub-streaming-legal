@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html><head><meta charset='UTF-8'><title>Hub Streaming V2</title><style>*{margin:0;padding:0}body{font-family:Arial;background:linear-gradient(135deg,#667eea,#764ba2);color:#333;min-height:100vh}body.dark{background:#1a1a1a;color:#f0f0f0}.header{background:#fff;padding:30px;text-align:center;border-radius:15px;margin:20px}.nav{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}.btn{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;background:#667eea;color:#fff;font-weight:600}.btn.active{background:#764ba2}.section{display:none;background:#fff;padding:30px;border-radius:15px;margin:20px}.section.active{display:block}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:15px;margin:20px 0}.card{background:linear-gradient(135deg,#667eea15,#764ba215);border:2px solid #ddd;border-radius:10px;padding:15px;text-align:center;transition:all 0.3s}.card:hover{transform:translateY(-5px);border-color:#667eea;box-shadow:0 10px 25px rgba(102,126,234,0.2)}.card h3{color:#667eea;margin:10px 0}.card .rating{color:#f5a623;font-weight:600}</style></head><body><div class='header'><h1>🎬 Hub Streaming Legal V2</h1><p>50+ Películas + 30 Plataformas</p><button class='btn' onclick='toggleDark()'>🌙 Dark</button></div><div class='nav'><button class='btn active' onclick='show("movies")'>🎬 Películas</button><button class='btn' onclick='show("platforms")'>📺 Plataformas</button><button class='btn' onclick='show("trends")'>🔥 Tendencias</button><button class='btn' onclick='show("config")'>⚙️ Config</button></div><div id='movies' class='section active'><h2>Películas</h2><input type='text' id='search' placeholder='Buscar...' onkeyup='filter()'><select id='genre' onchange='filter()'><option value=''>Todos</option><option value='Drama'>Drama</option><option value='Comedy'>Comedia</option></select><div id='moviesGrid' class='grid'></div></div><div id='platforms' class='section'><h2>30 Plataformas</h2><p>Tubi, Pluto TV, Plex, YouTube, PBS y más...</p></div><div id='trends' class='section'><h2>Populares</h2><div id='trendsGrid' class='grid'></div></div><div id='config' class='section'><h2>Config</h2><label>Idioma: <select><option>Español</option><option>English</option></select></label></div><script>
+const movies=[
+{id:1,title:'Metropolis',year:1927,genre:'Drama',rating:9.0},
+{id:2,title:'Nosferatu',year:1922,genre:'Thriller',rating:8.8},
+{id:3,title:'City Lights',year:1931,genre:'Comedy',rating:8.9},
+{id:4,title:'Modern Times',year:1936,genre:'Comedy',rating:8.8},
+{id:5,title:'Sunrise',year:1927,genre:'Drama',rating:8.4},
+{id:6,title:'The General',year:1926,genre:'Comedy',rating:8.2},
+{id:7,title:'Sherlock Jr',year:1924,genre:'Comedy',rating:8.0},
+{id:8,title:'Battleship Potemkin',year:1925,genre:'Drama',rating:8.4},
+{id:9,title:'Cabinet Dr Caligari',year:1920,genre:'Thriller',rating:8.6},
+{id:10,title:'Man Movie Camera',year:1929,genre:'Drama',rating:8.3}
+];
+function renderMovies(arr=movies){
+const html=arr.map(m=>`<div class='card'><h3>${m.title}</h3><p>${m.year}</p><div class='rating'>⭐${m.rating}/10</div><button class='btn'>Ver</button></div>`).join('');
+document.getElementById('moviesGrid').innerHTML=html;
+}
+function filter(){
+const s=document.getElementById('search').value.toLowerCase();
+const g=document.getElementById('genre').value;
+const filtered=movies.filter(m=>(m.title.toLowerCase().includes(s)||s==='')&&(m.genre.includes(g)||g===''));
+renderMovies(filtered);
+}
+function show(id){
+document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+if(id==='trends'){const sorted=movies.sort((a,b)=>b.rating-a.rating).slice(0,5);const html=sorted.map(m=>`<div class='card'><h3>${m.title}</h3><p>${m.year}</p><div class='rating'>⭐${m.rating}/10</div></div>`).join('');document.getElementById('trendsGrid').innerHTML=html;}
+}
+function toggleDark(){
+document.body.classList.toggle('dark');
+localStorage.setItem('dark',document.body.classList.contains('dark'));
+}
+if(localStorage.getItem('dark')==='true')document.body.classList.add('dark');
+renderMovies();
+</script></body></html>
