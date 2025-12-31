@@ -1,1 +1,230 @@
-<!DOCTYPE html><html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Mi Hub de Streaming Legal</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;background:#f0f0f0;color:#333}header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:20px;text-align:center}header h1{font-size:28px;margin:10px 0}header p{font-size:14px;opacity:0.9}nav{background:white;box-shadow:0 2px 4px rgba(0,0,0,0.1);position:sticky;top:0;z-index:100}nav ul{list-style:none;display:flex;justify-content:center;flex-wrap:wrap}nav li{margin:0}nav button{background:white;border:none;padding:15px 20px;cursor:pointer;font-size:14px;font-weight:bold;transition:all 0.3s}nav button.active{border-bottom:3px solid #667eea;color:#667eea}nav button:hover{background:#f5f5f5}.container{max-width:1200px;margin:20px auto;padding:20px}.section{display:none;animation:fadeIn 0.3s}.section.active{display:block}@keyframes fadeIn{from{opacity:0}to{opacity:1}}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:15px;margin:20px 0}.card{background:white;border-radius:8px;padding:15px;box-shadow:0 2px 8px rgba(0,0,0,0.1);transition:transform 0.3s,box-shadow 0.3s}.card:hover{transform:translateY(-5px);box-shadow:0 4px 12px rgba(0,0,0,0.15)}.card h3{margin:10px 0;color:#667eea}.card p{font-size:13px;color:#666;margin:8px 0}.btn{background:#667eea;color:white;border:none;padding:10px 15px;border-radius:5px;cursor:pointer;font-size:13px;transition:background 0.3s}.btn:hover{background:#764ba2}.btn-success{background:#4CAF50}.btn-success:hover{background:#45a049}.history-list{background:white;border-radius:8px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}.history-item{padding:10px;background:#f9f9f9;border-left:4px solid #667eea;margin:10px 0;border-radius:3px}.stats{background:white;border-radius:8px;padding:20px;margin:20px 0;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.1)}.stats h2{color:#667eea;margin:10px 0}.export-box{background:white;border-radius:8px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}.export-box textarea{width:100%;height:200px;padding:10px;border:1px solid #ddd;border-radius:5px;font-family:monospace;font-size:12px;margin:10px 0}</style></head><body><header><h1>🎬 Mi Hub de Streaming Legal</h1><p>Accede a 20+ plataformas sin suscripciones y sin riesgos</p></header><nav><ul><li><button class='nav-btn active' onclick='mostrarSeccion("plataformas")'>📺 Plataformas</button></li><li><button class='nav-btn' onclick='mostrarSeccion("tendencias")'>🔥 Tendencias</button></li><li><button class='nav-btn' onclick='mostrarSeccion("historial")'>📝 Historial</button></li><li><button class='nav-btn' onclick='mostrarSeccion("exportar")'>📊 Exportar</button></li></ul></nav><div class='container'><div id='plataformas' class='section active'><h2>20 Plataformas Legales</h2><div class='grid' id='plataformas-grid'></div></div><div id='tendencias' class='section'><h2>En Tendencia Ahora</h2><div class='grid' id='tendencias-grid'></div></div><div id='historial' class='section'><h2>Mi Historial</h2><div class='stats'><h2 id='contador-historial'>0 títulos vistos</h2></div><div id='historial-list'></div></div><div id='exportar' class='section'><h2>Exportar CSV</h2><div class='export-box'><h3>Plataformas CSV</h3><textarea id='csv-plataformas' readonly></textarea><button class='btn' onclick='copiarAlPortapapeles("csv-plataformas")'>Copiar</button></div></div></div><script>const plataformas=[{name:'Tubi',tipo:'Películas, Series, Anime',url:'https://tubitv.com'},{name:'Pluto TV',tipo:'TV en vivo, Películas',url:'https://pluto.tv'},{name:'Vix',tipo:'Contenido Latino',url:'https://vix.com'},{name:'Plex',tipo:'Películas, Series',url:'https://plex.tv'},{name:'The Roku Channel',tipo:'Películas, TV',url:'https://therokuchannel.roku.com'},{name:'Amazon Freevee',tipo:'Películas, Series',url:'https://freevee.com'},{name:'Crackle',tipo:'Películas, Series',url:'https://crackle.com'},{name:'Rakuten TV',tipo:'Películas, Series',url:'https://rakuten.tv'},{name:'FilmRise',tipo:'Películas, Documentales',url:'https://filmrise.com'},{name:'Cineverse',tipo:'Películas, Series',url:'https://cineverse.com'},{name:'Kanopy',tipo:'Documentales, Cine',url:'https://kanopy.com'},{name:'Hoopla',tipo:'Películas, Series',url:'https://hoopladigital.com'},{name:'Internet Archive',tipo:'Películas, Documentales',url:'https://archive.org/details/movies'},{name:'Public Domain',tipo:'Películas Clásicas',url:'https://publicdomainmovie.net'},{name:'Open Culture',tipo:'Películas, Documentales',url:'https://openculture.com/freemoviesonline'},{name:'YouTube Películas',tipo:'Películas Gratis',url:'https://youtube.com'},{name:'PBS Free',tipo:'Series, Documentales',url:'https://pbs.org'},{name:'Plex Live TV',tipo:'TV en vivo',url:'https://plex.tv/watch-tv'},{name:'Tubi LATAM',tipo:'Películas (LATAM)',url:'https://tubitv.com/home'},{name:'Pluto TV ES',tipo:'Películas (España)',url:'https://pluto.tv/es'}];const tendencias=[{title:'Night of the Living Dead',platform:'Internet Archive',categoria:'Imprescindibles'},{title:'His Girl Friday',platform:'Public Domain',categoria:'Imprescindibles'},{title:'Thriller 2024',platform:'Tubi',categoria:'Estrenos'},{title:'Acción reciente',platform:'Pluto TV',categoria:'Estrenos'},{title:'Comedia Familiar',platform:'Vix',categoria:'Familia'},{title:'Película Animada',platform:'Roku Channel',categoria:'Familia'},{title:'Clásico Oculto',platform:'FilmRise',categoria:'Joyas'},{title:'Drama Independiente',platform:'Cineverse',categoria:'Joyas'},{title:'Documental Histórico',platform:'Kanopy',categoria:'Joyas'},{title:'Noir Clásico',platform:'Public Domain',categoria:'Joyas'}];let historial=[];function init(){renderPlataformas();renderTendencias();cargarHistorial()}function mostrarSeccion(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');if(id==='exportar')generarCSV()}function renderPlataformas(){const grid=document.getElementById('plataformas-grid');grid.innerHTML='';plataformas.forEach(p=>{const card=document.createElement('div');card.className='card';card.innerHTML=`<h3>${p.name}</h3><p>${p.tipo}</p><a href='${p.url}' target='_blank' class='btn' style='display:inline-block;text-decoration:none;width:100%;text-align:center'>Visitar</a>`;grid.appendChild(card)})}function renderTendencias(){const grid=document.getElementById('tendencias-grid');grid.innerHTML='';tendencias.forEach(t=>{const card=document.createElement('div');card.className='card';card.innerHTML=`<h3>${t.title}</h3><p>📺 ${t.platform}</p><p style='font-size:12px;color:#999'>${t.categoria}</p><button class='btn btn-success' onclick='anadirAlHistorial("${t.title}","${t.platform}","${t.categoria}")'>✓ Marcar como visto</button>`;grid.appendChild(card)})}function anadirAlHistorial(title,platform,categoria){const fecha=new Date().toLocaleDateString('es-ES');const item={id:Date.now(),title,platform,categoria,fecha};historial.unshift(item);guardarHistorial();alert('✓ Agregado al historial!');renderHistorial();mostrarSeccion('historial')}function renderHistorial(){const container=document.getElementById('historial-list');const contador=document.getElementById('contador-historial');contador.textContent=`${historial.length} títulos vistos`;if(historial.length===0){container.innerHTML='<p style="text-align:center;color:#999">Marca algo como visto para comenzar...</p>';return}container.innerHTML='';historial.forEach(item=>{const div=document.createElement('div');div.className='history-item';div.innerHTML=`<strong>${item.title}</strong><br><small>📺 ${item.platform} | ${item.categoria} | ${item.fecha}</small><br><button class='btn' onclick='eliminarDelHistorial(${item.id})' style='margin-top:8px;background:#ff6b6b;font-size:12px;padding:5px 10px'>Eliminar</button>`;container.appendChild(div)})}function eliminarDelHistorial(id){historial=historial.filter(item=>item.id!==id);guardarHistorial();renderHistorial()}function guardarHistorial(){localStorage.setItem('historial_streaming',JSON.stringify(historial))}function cargarHistorial(){const saved=localStorage.getItem('historial_streaming');if(saved){historial=JSON.parse(saved);renderHistorial()}}function generarCSV(){const csvPlataformas='Nombre,Tipo,Enlace\n'+plataformas.map(p=>`"${p.name}","${p.tipo}",${p.url}`).join('\n');document.getElementById('csv-plataformas').value=csvPlataformas}function copiarAlPortapapeles(elementId){const textarea=document.getElementById(elementId);textarea.select();document.execCommand('copy');alert('✓ Copiado al portapapeles!')}init();</script></body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍌 Mi Hub de Streaming Legal - Gratis y Sin Riesgos</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #333; min-height: 100vh; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .header { background: rgba(255,255,255,0.95); border-radius: 15px; padding: 30px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
+        .header h1 { color: #667eea; font-size: 2.5em; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .header p { color: #666; font-size: 1.1em; margin-bottom: 20px; }
+        .nav-buttons { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+        .nav-btn { padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: 600; transition: all 0.3s; }
+        .nav-btn.active { background: #667eea; color: white; transform: scale(1.05); }
+        .nav-btn:not(.active) { background: #f0f0f0; color: #333; }
+        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .section { display: none; background: rgba(255,255,255,0.95); border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .section.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .search-box { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .search-box input, .search-box select { padding: 12px 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; flex: 1; min-width: 200px; }
+        .search-box input:focus, .search-box select:focus { outline: none; border-color: #667eea; }
+        .platforms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
+        .platform-card { background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); border: 2px solid #ddd; border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.3s; }
+        .platform-card:hover { border-color: #667eea; transform: translateY(-5px); box-shadow: 0 10px 25px rgba(102,126,234,0.2); }
+        .platform-card h3 { color: #667eea; margin-bottom: 10px; font-size: 1.3em; }
+        .platform-card p { color: #666; margin-bottom: 10px; font-size: 0.95em; }
+        .platform-card .badge { display: inline-block; background: #667eea; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.85em; margin: 5px 5px 5px 0; }
+        .platform-card .btn { background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
+        .platform-card .btn:hover { background: #764ba2; }
+        .csv-export { background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0; border: 1px solid #ddd; }
+        .csv-export textarea { width: 100%; height: 300px; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-family: monospace; font-size: 0.9em; resize: vertical; }
+        .csv-export button { background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 10px; }
+        .csv-export button:hover { background: #764ba2; }
+        .history-item { background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #667eea; }
+        .history-item h4 { color: #667eea; margin-bottom: 5px; }
+        .history-item p { color: #666; font-size: 0.9em; }
+        .party-mode { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .party-header { background: rgba(0,0,0,0.1); padding: 20px; border-radius: 8px; margin-bottom: 20px; color: white; }
+        .party-header h2 { margin-bottom: 10px; }
+        .party-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 1024px) { .party-container { grid-template-columns: 1fr; } }
+        .party-video-container { background: #000; border-radius: 12px; overflow: hidden; }
+        .party-video { width: 100%; aspect-ratio: 16/9; background: #000; }
+        .party-controls { background: rgba(0,0,0,0.8); padding: 15px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        .party-controls button { background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
+        .party-controls button:hover { background: #764ba2; }
+        .party-controls button.active { background: #f5576c; }
+        .party-chat { background: #fff; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; max-height: 500px; }
+        .party-chat-messages { flex: 1; overflow-y: auto; padding: 15px; background: #f8f9fa; }
+        .party-chat-message { margin: 10px 0; padding: 10px; background: white; border-radius: 6px; border-left: 3px solid #667eea; }
+        .party-chat-message .user { color: #667eea; font-weight: 600; font-size: 0.9em; }
+        .party-chat-message .text { color: #333; margin-top: 5px; }
+        .party-chat-input { display: flex; gap: 10px; padding: 15px; border-top: 1px solid #ddd; }
+        .party-chat-input input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
+        .party-chat-input button { background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        .trends-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .trend-card { background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); border: 2px solid #ddd; border-radius: 12px; padding: 20px; text-align: center; }
+        .trend-card img { width: 100%; height: 300px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; background: #ddd; }
+        .trend-card h3 { color: #667eea; margin: 10px 0; }
+        .trend-card p { color: #666; font-size: 0.9em; margin-bottom: 10px; }
+        .trend-card .rating { color: #f5a623; font-weight: 600; }
+        .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 15px 0; }
+        .control-group { display: flex; flex-direction: column; gap: 8px; }
+        .control-group label { color: #667eea; font-weight: 600; font-size: 0.95em; }
+        .control-group select, .control-group input { padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 1em; }
+        .control-group select:focus, .control-group input:focus { outline: none; border-color: #667eea; }
+        .status-bar { background: #667eea; color: white; padding: 10px 15px; border-radius: 6px; margin: 10px 0; font-size: 0.9em; }
+        .user-badge { background: #764ba2; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.85em; display: inline-block; margin: 5px 5px 0 0; }
+        .error { color: #f5576c; background: #ffe0e6; padding: 10px; border-radius: 6px; margin: 10px 0; }
+        .success { color: #28a745; background: #d4edda; padding: 10px; border-radius: 6px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍌 Mi Hub de Streaming Legal</h1>
+            <p>Accede a 20+ plataformas SIN suscripciones, SIN riesgos, 100% LEGALES</p>
+            <div class="nav-buttons">
+                <button class="nav-btn active" onclick="showSection('platforms')">📺 Plataformas</button>
+                <button class="nav-btn" onclick="showSection('trends')">🔥 Tendencias</button>
+                <button class="nav-btn" onclick="showSection('history')">📝 Historial</button>
+                <button class="nav-btn" onclick="showSection('export')">📊 Exportar CSV</button>
+                <button class="nav-btn" onclick="showSection('party')">🎉 Modo Party</button>
+                <button class="nav-btn" onclick="showSection('settings')">⚙️ Configuración</button>
+            </div>
+        </div>
+
+    <!-- SECTION: PLATAFORMAS -->
+    <div id="platforms" class="section active">
+      <h2>Plataformas de Streaming Legales</h2>
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Buscar plataforma..." onkeyup="searchPlatforms()">
+        <select id="filterType" onchange="filterPlatforms()">
+          <option value="">Todos los tipos</option>
+          <option value="Peliculas">Peliculas</option>
+          <option value="Series">Series</option>
+        </select>
+      </div>
+      <div id="platformsContainer" class="platforms-grid"></div>
+    </div>
+
+    <!-- SECTION: TENDENCIAS -->
+    <div id="trends" class="section">
+      <h2>Tendencias Ahora</h2>
+      <div id="trendsContainer" class="trends-grid"></div>
+    </div>
+
+    <!-- SECTION: HISTORIAL -->
+    <div id="history" class="section">
+      <h2>Mi Historial</h2>
+      <button onclick="clearHistory()" style="background: #f5576c; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin-bottom: 20px;">Limpiar Historial</button>
+      <div id="historyContainer"></div>
+    </div>
+
+    <!-- SECTION: EXPORTAR CSV -->
+    <div id="export" class="section">
+      <h2>Exportar a CSV</h2>
+      <div class="csv-export">
+        <h4>CSV de Plataformas</h4>
+        <textarea id="csvPlatforms" readonly></textarea>
+        <button onclick="copyCSV('csvPlatforms')">Copiar CSV</button>
+      </div>
+    </div>
+
+    <!-- SECTION: MODO PARTY -->
+    <div id="party" class="section party-mode">
+      <div class="party-header">
+        <h2>Modo Party - Ver Juntos</h2>
+      </div>
+      <div id="partySetup" style="background: rgba(255,255,255,0.95); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <h3>Crear/Unirse a Sala</h3>
+        <div class="controls-grid">
+          <div class="control-group">
+            <label>Tu Nombre</label>
+            <input type="text" id="userName" value="Usuario1">
+          </div>
+          <div class="control-group">
+            <label>Codigo de Sala</label>
+            <input type="text" id="roomCode" readonly>
+          </div>
+        </div>
+        <button onclick="createRoom()" style="background: #667eea; color: white; border: none; padding: 12px 30px; border-radius: 6px; cursor: pointer; margin-right: 10px; margin-top: 10px;">Crear Sala</button>
+      </div>
+      <div id="partyActive" style="display: none;">
+        <div class="party-container">
+          <div>
+            <div class="party-video-container">
+              <video id="partyVideo" class="party-video" controls></video>
+            </div>
+            <div class="party-controls">
+              <button onclick="togglePartyPlay()" id="partyPlayBtn">Play</button>
+              <button onclick="syncPlayback()">Sincronizar</button>
+              <button onclick="togglePartyMute()" id="partyMuteBtn">Sonido ON</button>
+              <button onclick="toggleSubtitles()" id="partySubtitlesBtn">CC</button>
+            </div>
+            <div class="controls-grid" style="margin-top: 15px;">
+              <div class="control-group">
+                <label>Idioma Audio</label>
+                <select id="audioLanguage" onchange="changeAudioLanguage()">
+                  <option value="es">Espanol</option>
+                  <option value="en">English</option>
+                  <option value="pt">Portugues</option>
+                  <option value="fr">Francais</option>
+                </select>
+              </div>
+              <div class="control-group">
+                <label>Subtitulos</label>
+                <select id="subtitleLanguage" onchange="changeSubtitleLanguage()">
+                  <option value="es">Espanol</option>
+                  <option value="en">English</option>
+                  <option value="none">Sin subtitulos</option>
+                </select>
+              </div>
+              <div class="control-group">
+                <label>Volumen</label>
+                <input type="range" id="volumeControl" min="0" max="100" value="100" onchange="changeVolume()">
+              </div>
+            </div>
+          </div>
+          <div class="party-chat">
+            <div class="party-chat-messages" id="chatMessages"></div>
+            <div class="party-chat-input">
+              <input type="text" id="chatInput" placeholder="Mensaje..." onkeypress="handleChatKeyPress(event)">
+              <button onclick="sendChatMessage()">Enviar</button>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 20px;">
+          <h4>Usuarios en la Sala</h4>
+          <div id="usersInRoom"></div>
+          <button onclick="leaveRoom()" style="background: #f5576c; color: white; border: none; padding: 10px 20px; border-radius: 6px; margin-top: 10px;">Salir</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: SETTINGS -->
+    <div id="settings" class="section">
+      <h2>Configuracion</h2>
+      <div class="controls-grid" style="margin-top: 20px;">
+        <div class="control-group">
+          <label>Idioma Interfaz</label>
+          <select id="interfaceLanguage" onchange="changeInterfaceLanguage()">
+            <option value="es">Espanol</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label>Calidad Video</label>
+          <select id="videoQuality">
+            <option value="1080p">1080p Full HD</option>
+            <option value="720p">720p HD</option>
+            <option value="480p">480p SD</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top: 30px; background: #f8f9fa; padding: 15px; border-radius: 8px;">
+        <h4>Privacidad - Todos tus datos se guardan LOCALMENTE</h4>
+        <button onclick="exportUserData()" style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 6px; margin-right: 10px;">Exportar Datos</button>
+        <button onclick="deleteAllData()" style="background: #f5576c; color: white; border: none; padding: 10px 20px; border-radius: 6px;">Eliminar Todo</button>
+      </div>
+    </div>
+  </div>
+
+  <script>const platforms = [{name:'Tubi',type:'Peliculas, Series, Anime',url:'https://tubitv.com',desc:'Gratis con anuncios'},{name:'Pluto TV',type:'TV en vivo, Peliculas',url:'https://pluto.tv',desc:'TV en vivo gratis'},{name:'Vix',type:'Peliculas, Series',url:'https://vix.com',desc:'Contenido Latino'},{name:'Plex',type:'Peliculas, Series',url:'https://plex.tv',desc:'Cine y series'},{name:'Roku Channel',type:'Peliculas, TV',url:'https://therokuchannel.roku.com',desc:'Contenido gratis'},{name:'Amazon Freevee',type:'Peliculas, Series',url:'https://freevee.com',desc:'Series y peliculas'},{name:'Crackle',type:'Peliculas, Series',url:'https://crackle.com',desc:'Cine clasico'},{name:'Rakuten TV',type:'Peliculas',url:'https://rakuten.tv',desc:'Peliculas gratis'},{name:'FilmRise',type:'Peliculas, Documentales',url:'https://filmrise.com',desc:'Peliculas independientes'},{name:'Cineverse',type:'Peliculas',url:'https://cineverse.com',desc:'Todos los generos'},{name:'Kanopy',type:'Documentales, Cine',url:'https://kanopy.com',desc:'Cine de autor'},{name:'Hoopla',type:'Peliculas, Series',url:'https://hoopladigital.com',desc:'Entretenimiento digital'},{name:'Internet Archive',type:'Peliculas, Documentales',url:'https://archive.org/details/movies',desc:'Dominio publico'},{name:'Public Domain Movies',type:'Peliculas',url:'https://publicdomainmovie.net',desc:'Clasicos'},{name:'Open Culture',type:'Peliculas, Documentales',url:'https://openculture.com',desc:'Cine gratuito'},{name:'YouTube',type:'Peliculas',url:'https://youtube.com',desc:'Miles de peliculas'},{name:'PBS',type:'Series, Documentales',url:'https://pbs.org',desc:'Programas de calidad'},{name:'IMDB Free',type:'Peliculas, Series',url:'https://imdb.com/tv',desc:'IMDB gratis'},{name:'Freevee',type:'Peliculas',url:'https://amazon.com/freevee',desc:'Amazon gratis'},{name:'Tubi Anime',type:'Anime',url:'https://tubitv.com/anime',desc:'Anime gratis'}]; const trends = [{title:'Oppenheimer',platform:'YouTube',rating:'9.0',type:'Pelicula'},{title:'Barbie',platform:'Pluto TV',rating:'8.8',type:'Pelicula'},{title:'The Last of Us',platform:'YouTube',rating:'9.2',type:'Serie'},{title:'Breaking Bad',platform:'Plex',rating:'9.5',type:'Serie'},{title:'Duna 2',platform:'Roku',rating:'8.9',type:'Pelicula'},{title:'Anime Master',platform:'Tubi',rating:'8.7',type:'Anime'},{title:'Nature Docs',platform:'PBS',rating:'9.1',type:'Documental'},{title:'El Puente',platform:'Vix',rating:'8.5',type:'Pelicula'},{title:'Exotic Travel',platform:'Open Culture',rating:'8.9',type:'Documental'},{title:'Clasicos de Oro',platform:'Internet Archive',rating:'8.8',type:'Pelicula'}]; let watchHistory = JSON.parse(localStorage.getItem('watchHistory')) || []; let currentRoom = null; let roomUsers = {}; let isMuted = false; let showSubtitles = false; let currentAudioLanguage = 'es'; let currentSubtitleLanguage = 'es'; let syncedPlaybackTime = 0; function initApp(){renderPlatforms(); renderTrends(); renderCSV(); updateHistoryUI();} function showSection(id){document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active');} function renderPlatforms(){let html = platforms.map(p => `<div class="platform-card"><h3>${p.name}</h3><p>${p.desc}</p><div class="badge">${p.type}</div><button class="btn" onclick="addToHistory('${p.name}', '${p.url}')">Ir a ${p.name}</button></div>`).join(''); document.getElementById('platformsContainer').innerHTML = html;} function searchPlatforms(){let query = document.getElementById('searchInput').value.toLowerCase(); let filtered = platforms.filter(p => p.name.toLowerCase().includes(query)); let html = filtered.map(p => `<div class="platform-card"><h3>${p.name}</h3><p>${p.desc}</p><div class="badge">${p.type}</div><button class="btn" onclick="addToHistory('${p.name}', '${p.url}')">Ir a ${p.name}</button></div>`).join(''); document.getElementById('platformsContainer').innerHTML = html;} function filterPlatforms(){let filter = document.getElementById('filterType').value; let filtered = filter ? platforms.filter(p => p.type.includes(filter)) : platforms; let html = filtered.map(p => `<div class="platform-card"><h3>${p.name}</h3><p>${p.desc}</p><div class="badge">${p.type}</div><button class="btn" onclick="addToHistory('${p.name}', '${p.url}')">Ir a ${p.name}</button></div>`).join(''); document.getElementById('platformsContainer').innerHTML = html;} function renderTrends(){let html = trends.map(t => `<div class="trend-card"><h3>${t.title}</h3><p>${t.platform}</p><div class="rating">Rating: ${t.rating}/10</div><p style="margin-top:10px;font-size:0.9em;color:#666;">${t.type}</p></div>`).join(''); document.getElementById('trendsContainer').innerHTML = html;} function addToHistory(name, url){let item = {name, url, date: new Date().toLocaleString()}; watchHistory.unshift(item); if(watchHistory.length > 50) watchHistory.pop(); localStorage.setItem('watchHistory', JSON.stringify(watchHistory)); updateHistoryUI(); window.open(url, '_blank');} function updateHistoryUI(){let html = watchHistory.map((h, i) => `<div class="history-item"><h4>${h.name}</h4><p>${h.date}</p><button onclick="removeFromHistory(${i})" style="background:#f5576c;color:white;border:none;padding:5px 10px;border-radius:4px;cursor:pointer;font-size:0.85em;">Eliminar</button></div>`).join(''); document.getElementById('historyContainer').innerHTML = html || '<p style="color:#666;">No hay historial aun</p>';} function removeFromHistory(index){watchHistory.splice(index, 1); localStorage.setItem('watchHistory', JSON.stringify(watchHistory)); updateHistoryUI();} function clearHistory(){watchHistory = []; localStorage.setItem('watchHistory', JSON.stringify(watchHistory)); updateHistoryUI();} function renderCSV(){let csv = 'Nombre,Tipo,Enlace,Descripcion\n' + platforms.map(p => `"${p.name}","${p.type}","${p.url}","${p.desc}"`).join('\n'); document.getElementById('csvPlatforms').value = csv;} function copyCSV(id){let textarea = document.getElementById(id); textarea.select(); document.execCommand('copy'); alert('CSV copiado al portapapeles');} function createRoom(){let userName = document.getElementById('userName').value || 'Usuario'; let roomCode = Math.random().toString(36).substr(2, 9).toUpperCase(); document.getElementById('roomCode').value = roomCode; currentRoom = roomCode; roomUsers = {[roomCode]: userName}; updateRoomUI(); document.getElementById('partySetup').style.display = 'none'; document.getElementById('partyActive').style.display = 'block'; addChatMessage('Sistema', `${userName} creo la sala`);} function joinRoom(){let code = document.getElementById('joinRoomCode').value; let userName = document.getElementById('userName').value || 'Usuario'; if(!code){alert('Ingresa un codigo de sala'); return;} currentRoom = code; roomUsers[code] = userName; updateRoomUI(); document.getElementById('partySetup').style.display = 'none'; document.getElementById('partyActive').style.display = 'block'; addChatMessage('Sistema', `${userName} se unio a la sala`);} function leaveRoom(){currentRoom = null; roomUsers = {}; document.getElementById('partySetup').style.display = 'block'; document.getElementById('partyActive').style.display = 'none'; document.getElementById('chatMessages').innerHTML = ''; document.getElementById('usersInRoom').innerHTML = '';} function updateRoomUI(){let usersHtml = Object.entries(roomUsers).map(([code, user]) => `<div class="user-badge">${user}</div>`).join(''); document.getElementById('usersInRoom').innerHTML = usersHtml;} function togglePartyPlay(){let btn = document.getElementById('partyPlayBtn'); let video = document.getElementById('partyVideo'); if(video.paused){video.play(); btn.textContent = 'Pausar';}else{video.pause(); btn.textContent = 'Play';}} function syncPlayback(){let video = document.getElementById('partyVideo'); syncedPlaybackTime = video.currentTime; addChatMessage('Sistema', 'Reproduccion sincronizada para todos');} function togglePartyMute(){let btn = document.getElementById('partyMuteBtn'); let video = document.getElementById('partyVideo'); if(video.muted){video.muted = false; btn.textContent = 'Sonido ON'; isMuted = false;}else{video.muted = true; btn.textContent = 'Sonido OFF'; isMuted = true;}} function toggleSubtitles(){let btn = document.getElementById('partySubtitlesBtn'); showSubtitles = !showSubtitles; btn.textContent = showSubtitles ? 'CC Activado' : 'CC Desactivado'; addChatMessage('Sistema', `Subtitulos: ${showSubtitles ? 'activados' : 'desactivados'}`);}  function changeAudioLanguage(){let lang = document.getElementById('audioLanguage').value; currentAudioLanguage = lang; addChatMessage('Sistema', `Idioma de audio cambiado a: ${lang}`);}  function changeSubtitleLanguage(){let lang = document.getElementById('subtitleLanguage').value; currentSubtitleLanguage = lang; addChatMessage('Sistema', `Idioma de subtitulos: ${lang}`);}  function changeVolume(){let volume = document.getElementById('volumeControl').value; let video = document.getElementById('partyVideo'); video.volume = volume / 100;}  function addChatMessage(user, text){let msg = document.createElement('div'); msg.className = 'party-chat-message'; msg.innerHTML = `<div class="user">${user}</div><div class="text">${text}</div>`; document.getElementById('chatMessages').appendChild(msg); document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;}  function sendChatMessage(){let input = document.getElementById('chatInput'); let text = input.value.trim(); if(text){let user = document.getElementById('userName').value || 'Usuario'; addChatMessage(user, text); input.value = '';}}  function handleChatKeyPress(e){if(e.key === 'Enter'){sendChatMessage();}}  function changeInterfaceLanguage(){let lang = document.getElementById('interfaceLanguage').value; localStorage.setItem('language', lang); alert('Idioma cambiado a: ' + lang);}  function exportUserData(){let data = {watchHistory, rooms: roomUsers, settings: {language: document.getElementById('interfaceLanguage').value}}; let json = JSON.stringify(data, null, 2); let blob = new Blob([json], {type: 'application/json'}); let url = URL.createObjectURL(blob); let a = document.createElement('a'); a.href = url; a.download = 'mis-datos-streaming.json'; a.click();}  function deleteAllData(){if(confirm('¿Eliminar TODO?')){localStorage.clear(); watchHistory = []; updateHistoryUI(); alert('Todos tus datos han sido eliminados');}}  window.addEventListener('load', initApp);
+  </script>
+</body>
+</html>
